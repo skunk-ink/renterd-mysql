@@ -1,0 +1,22 @@
+services:
+  mysql:
+    image: skunkink/renterd-mysql
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      DB_USER: ${DB_USER:-sia}
+      DB_PASSWORD: ${DB_PASSWORD}
+      RENTERD_DB: ${RENTERD_DB:-renterd}
+      RENTERD_METRICS_DB: ${RENTERD_METRICS_DB:-renterd_metrics}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    cap_add:
+      - SYS_NICE
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql/db:/var/lib/mysql
